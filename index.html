@@ -11,7 +11,7 @@
         path = /\.[a-zA-Z0-9]+$/.test(last) ? path.replace(/\/[^/]*$/, "/") : path + "/";
       }
       var base = document.createElement("base");
-      base.href = path;
+      base.href = window.location.origin + path;
       document.head.appendChild(base);
     })();
   </script>
@@ -56,31 +56,31 @@
         <p class="lead">Noms del dataset (grups genèrics) amb fotos orientatives incloses al projecte (origen: Wikimedia Commons).</p>
         <div class="species-grid">
           <figure>
-            <img src="img/crane.jpg" alt="Grua, representació de Crane" loading="lazy" width="160" height="110" />
+            <img src="./img/crane.jpg" alt="Grua, representació de Crane" loading="lazy" width="160" height="110" />
             <figcaption><strong>Crane</strong> · grua</figcaption>
           </figure>
           <figure>
-            <img src="img/eagle.jpg" alt="Àguila, representació de Eagle" loading="lazy" width="160" height="110" />
+            <img src="./img/eagle.jpg" alt="Àguila, representació de Eagle" loading="lazy" width="160" height="110" />
             <figcaption><strong>Eagle</strong> · àguila</figcaption>
           </figure>
           <figure>
-            <img src="img/goose.jpg" alt="Oca, representació de Goose" loading="lazy" width="160" height="110" />
+            <img src="./img/goose.jpg" alt="Oca, representació de Goose" loading="lazy" width="160" height="110" />
             <figcaption><strong>Goose</strong> · oca</figcaption>
           </figure>
           <figure>
-            <img src="img/hawk.jpg" alt="Aligot, representació de Hawk" loading="lazy" width="160" height="110" />
+            <img src="./img/hawk.jpg" alt="Aligot, representació de Hawk" loading="lazy" width="160" height="110" />
             <figcaption><strong>Hawk</strong> · aligot</figcaption>
           </figure>
           <figure>
-            <img src="img/stork.jpg" alt="Cigonya, representació de Stork" loading="lazy" width="160" height="110" />
+            <img src="./img/stork.jpg" alt="Cigonya, representació de Stork" loading="lazy" width="160" height="110" />
             <figcaption><strong>Stork</strong> · cigonya</figcaption>
           </figure>
           <figure>
-            <img src="img/swallow.jpg" alt="Oreneta, representació de Swallow" loading="lazy" width="160" height="110" />
+            <img src="./img/swallow.jpg" alt="Oreneta, representació de Swallow" loading="lazy" width="160" height="110" />
             <figcaption><strong>Swallow</strong> · oreneta</figcaption>
           </figure>
           <figure>
-            <img src="img/warbler.jpg" alt="Papa-roques, representació de Warbler" loading="lazy" width="160" height="110" />
+            <img src="./img/warbler.jpg" alt="Papa-roques, representació de Warbler" loading="lazy" width="160" height="110" />
             <figcaption><strong>Warbler</strong> · papa-roques</figcaption>
           </figure>
         </div>
