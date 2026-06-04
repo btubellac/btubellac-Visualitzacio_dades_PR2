@@ -143,6 +143,59 @@ header.hero {
   color: var(--muted);
 }
 
+.chart-conclusion {
+  margin: 0.5rem 0 0;
+  padding: 0.6rem 0.85rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  background: #f0f7f0;
+  border-left: 3px solid var(--success);
+  border-radius: 0 8px 8px 0;
+  color: var(--ink);
+}
+
+.species-gallery {
+  margin-bottom: 2.5rem;
+  padding: 1.5rem;
+  background: var(--card);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+}
+
+.species-gallery h2 {
+  margin-top: 0;
+  color: var(--accent);
+  font-size: 1.35rem;
+}
+
+.species-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.species-grid figure {
+  margin: 0;
+  text-align: center;
+}
+
+.species-grid img {
+  width: 100%;
+  max-width: 160px;
+  height: 110px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+}
+
+.species-grid figcaption {
+  margin-top: 0.35rem;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
 .sidebar-hint {
   font-size: 0.82rem;
   color: var(--muted);

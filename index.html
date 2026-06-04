@@ -51,6 +51,41 @@
         </p>
       </section>
 
+      <section class="species-gallery" aria-labelledby="h-species-gallery">
+        <h2 id="h-species-gallery">Espècies del projecte</h2>
+        <p class="lead">Noms del dataset (grups genèrics) amb imatges orientatives de Wikimedia Commons.</p>
+        <div class="species-grid">
+          <figure>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Common_crane_grus_grus.jpg/240px-Common_crane_grus_grus.jpg" alt="Grua comuna, representació de Crane" loading="lazy" width="240" height="160" />
+            <figcaption><strong>Crane</strong> · grua</figcaption>
+          </figure>
+          <figure>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Golden_Eagle_standing.jpg/240px-Golden_Eagle_standing.jpg" alt="Àguila daurada, representació de Eagle" loading="lazy" width="240" height="160" />
+            <figcaption><strong>Eagle</strong> · àguila</figcaption>
+          </figure>
+          <figure>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Branta_canadensis_on_a_meadow.jpg/240px-Branta_canadensis_on_a_meadow.jpg" alt="Oca del Canadà, representació de Goose" loading="lazy" width="240" height="160" />
+            <figcaption><strong>Goose</strong> · oca</figcaption>
+          </figure>
+          <figure>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Common_Buzzard_%28Buteo_buteo%29_1.jpg/240px-Common_Buzzard_%28Buteo_buteo%29_1.jpg" alt="Aligot comú, representació de Hawk" loading="lazy" width="240" height="160" />
+            <figcaption><strong>Hawk</strong> · aligot</figcaption>
+          </figure>
+          <figure>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Ciconia_ciconia_%28Marek_Szczepanek%29.jpg/240px-Ciconia_ciconia_%28Marek_Szczepanek%29.jpg" alt="Cigonya blanca, representació de Stork" loading="lazy" width="240" height="160" />
+            <figcaption><strong>Stork</strong> · cigonya</figcaption>
+          </figure>
+          <figure>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Hirundo_rustica_ICCP.jpg/240px-Hirundo_rustica_ICCP.jpg" alt="Oreneta comuna, representació de Swallow" loading="lazy" width="240" height="160" />
+            <figcaption><strong>Swallow</strong> · oreneta</figcaption>
+          </figure>
+          <figure>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Phylloscopus_collybita_2.jpg/240px-Phylloscopus_collybita_2.jpg" alt="Papa-roques, representació de Warbler" loading="lazy" width="240" height="160" />
+            <figcaption><strong>Warbler</strong> · papa-roques</figcaption>
+          </figure>
+        </div>
+      </section>
+
       <section id="sec-map" aria-labelledby="h-map">
         <h2 id="h-map">1. On connecten les rutes?</h2>
         <p class="lead">
@@ -61,6 +96,9 @@
           Cada arc connecta una zona d'inici i una de final. Un gruix major indica més trajectes similars; el color
           verd mostra més èxits migratoris i el vermell, més fracassos. Els indicadors superiors resumeixen la mostra
           segons els filtres actius.
+        </p>
+        <p class="chart-conclusion">
+          <strong>Conclusió:</strong> les rutes es distribueixen per tots els continents del dataset; globalment l'èxit migratori ronda el <strong>51%</strong> (simulació equilibrada). En filtrar per espècie o regió, els arcs i KPIs mostren on es concentren fluxos més exitosos o més interromputs.
         </p>
         <div class="kpi-row" id="kpi-map" aria-live="polite"></div>
         <div id="map-panel" role="img" aria-label="Mapa mundial de rutes migratòries filtrables"></div>
@@ -73,6 +111,9 @@
           Les barres més altes corresponen a migracions més llargues (km). El color de cada barra reflecteix la
           proporció d'èxit: ajuda a veure si les distàncies extremes coincideixen amb més o menys fracassos.
         </p>
+        <p class="chart-conclusion">
+          <strong>Conclusió:</strong> les migracions més llargues apareixen sobretot en <strong>Stork</strong> (Àsia i Austràlia, ~2.590 km de mitjana) i <strong>Hawk</strong> (Amèrica del Nord, ~2.566 km), amb èxit proper al 50%. No hi ha una regió «curta» clarament dominant: cal comparar espècie i regió junts.
+        </p>
         <div id="chart-species" class="chart-panel"></div>
         <div id="context-species" class="context-card" hidden></div>
       </section>
@@ -81,9 +122,11 @@
         <h2 id="h-weather">3. Meteorologia i interrupcions</h2>
         <p class="lead">Pregunta clau 2: en quines condicions augmenta el risc de fracàs o interrupció?</p>
         <p class="chart-insight">
-          Mostra la taxa d'interrupció segons el temps durant el vol. En general, condicions adverses
-          (<em>Stormy</em>, <em>Foggy</em>, <em>Windy</em>) solen associar-se a més migracions interrompudes que
-          els dies clars.
+          Mostra la taxa d'interrupció segons el temps durant el vol. Compara <em>Clear</em>, <em>Windy</em>,
+          <em>Stormy</em>, <em>Foggy</em> i <em>Rainy</em>.
+        </p>
+        <p class="chart-conclusion">
+          <strong>Conclusió:</strong> en aquest dataset sintètic la taxa d'interrupció és gairebé idèntica (~<strong>50%</strong>) per a totes les condicions. És a dir, el generador no penalitza clarament un temps respecte a un altre; en dades reals esperaríem més interrupcions amb tempestes o boira.
         </p>
         <div id="chart-weather" class="chart-panel"></div>
       </section>
@@ -93,7 +136,10 @@
         <p class="lead">Pregunta clau 3: com es relacionen hàbitat i disponibilitat d'aliment amb l'èxit de nidificació?</p>
         <p class="chart-insight">
           Cada barra combina tipus d'hàbitat i disponibilitat d'aliment. Comparar-les permet veure si determinats
-          entorns (per exemple zones humides amb aliment abundant) s'associen a un major èxit de nidificació.
+          entorns s'associen a un major èxit de nidificació.
+        </p>
+        <p class="chart-conclusion">
+          <strong>Conclusió:</strong> les diferències entre hàbitats són subtils (~51–53% d'èxit de nidificació). Destaca lleugerament <strong>Wetland + Low</strong> i <strong>Forest + Low</strong>; no apareix un patró lineal «més aliment = més èxit», cosa que recorda les limitacions de la simulació.
         </p>
         <div id="chart-habitat" class="chart-panel"></div>
       </section>
@@ -102,8 +148,10 @@
         <h2 id="h-flock">5. Bandada vs. migració solitària</h2>
         <p class="lead">Pregunta clau 4: la migració en grup ofereix avantatges mesurables?</p>
         <p class="chart-insight">
-          Compara l'èxit migratori entre aus que van en bandada i les que migren soles. Si les barres són
-          semblants, el conjunt de dades no mostra un avantatge clar del vol en grup en aquesta simulació.
+          Compara l'èxit migratori entre aus que van en bandada i les que migren soles.
+        </p>
+        <p class="chart-conclusion">
+          <strong>Conclusió:</strong> bandada i vol solitari tenen la mateixa taxa d'èxit (~<strong>51%</strong>). En aquest dataset <strong>no es demostra avantatge de migrar en grup</strong>; en estudis reals algunes espècies sí en mostrarien.
         </p>
         <div id="chart-flock" class="chart-panel"></div>
       </section>
@@ -113,7 +161,9 @@
         <p class="lead">Pregunta clau 5: patrons d'ús de l'espai aeri segons espècie i meteorologia.</p>
         <p class="chart-insight">
           El rang d'altitud (màxim − mínim) descriu com cada espècie utilitza l'espai aeri segons la meteorologia.
-          Valors alts en dies ventosos o tempestuosos poden indicar més variació de vol per evitar obstacles o corrents.
+        </p>
+        <p class="chart-conclusion">
+          <strong>Conclusió:</strong> els rangs més amplis es donen en <strong>Stork</strong> amb vent (<em>Windy</em>, ~5.300 m) i <strong>Hawk</strong> amb pluja o vent (~5.150–5.200 m), suggerint més variació vertical en certes combinacions espècie–temps.
         </p>
         <div id="chart-altitude" class="chart-panel"></div>
       </section>
@@ -124,6 +174,9 @@
         <p class="chart-insight">
           Cada línia segueix una espècie al llarg dels mesos d'inici de migració. Els pics indiquen èpoques de sortida
           més freqüents; comparar espècies permet observar desfasaments en el calendari migratori.
+        </p>
+        <p class="chart-conclusion">
+          <strong>Conclusió:</strong> cada espècie té un pic diferent: <strong>Hawk, Warbler i Goose</strong> a la primavera (març), <strong>Swallow</strong> al febrer, <strong>Stork</strong> al novembre, <strong>Crane</strong> a l'octubre, <strong>Eagle</strong> al gener. Això il·lustra calendaris migratoris desfasats, rellevant per al canvi climàtic (amb cautela: dades sintètiques).
         </p>
         <div id="chart-temporal" class="chart-panel"></div>
       </section>
