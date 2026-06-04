@@ -1,0 +1,13 @@
+{
+  "name": "pr2",
+  "version": "1.0.0",
+  "description": "Visualització narrativa i interactiva sobre migració d'aus, continuació de la PR1 (`bird_migration_with_origin_destination`).",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}
