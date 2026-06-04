@@ -1,4 +1,4 @@
-# btubellac-Visualitzacio_dades_PR2
+# Visualitzacio_dades_PR2 — Rutes en joc
 
 # Rutes en joc — PR2 Visualització de dades (UOC)
 
@@ -6,9 +6,9 @@ Visualització narrativa i interactiva sobre migració d'aus, continuació de la
 
 ## Enllaç públic (GitHub Pages)
 
-Visualització: https://btubellac.github.io/btubellac-Visualitzacio_dades_PR2/
+Visualització: https://btubellac.github.io/Visualitzacio_dades_PR2---Rutes-en-joc/
 
-Codi: https://github.com/btubellac/btubellac-Visualitzacio_dades_PR2
+Codi: https://github.com/btubellac/Visualitzacio_dades_PR2---Rutes-en-joc
 
 ## Requisits
 
