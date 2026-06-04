@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8" />
+  <script>
+    /* Base correcta per GitHub Pages (/nom-repo/) i servidor local */
+    (function () {
+      var path = window.location.pathname;
+      if (!path.endsWith("/")) {
+        var last = path.split("/").pop() || "";
+        path = /\.[a-zA-Z0-9]+$/.test(last) ? path.replace(/\/[^/]*$/, "/") : path + "/";
+      }
+      var base = document.createElement("base");
+      base.href = path;
+      document.head.appendChild(base);
+    })();
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Rutes en joc: visualització interactiva de migració d'aus amb context de conservació real." />
+  <title>Rutes en joc — Migració d'aus</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <script src="https://cdn.jsdelivr.net/npm/topojson-client@3"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Saltar al contingut principal</a>
+
+  <header class="hero" role="banner">
+    <p class="badge">PR2 · Visualització de dades · UOC</p>
+    <h1>Rutes en joc</h1>
+    <p>
+      Una història visual sobre riscos i patrons de migració d'aus. Les trajectòries provenen del dataset
+      <em>bird_migration_with_origin_destination</em> (10.000 registres sintètics de la PR1), contextualitzades
+      amb dades reals de conservació (IUCN, BirdLife, IPCC) per compensar la limitació científica del simulador.
+    </p>
+  </header>
+
+  <main id="main" class="layout" role="main">
+    <article class="story" aria-label="Narrativa de la visualització">
+      <section class="pr1-context" aria-labelledby="h-pr1">
+        <h2 id="h-pr1">Continuació de la PR1</h2>
+        <p>
+          A la primera part vaig seleccionar el dataset <em>bird_migration_with_origin_destination</em> (10.000 aus,
+          40+ variables) i vaig definir sis preguntes de recerca sobre distància, meteorologia, hàbitat, bandades,
+          altitud i calendari migratori. El professor va acceptar la proposta però va demanar
+          <strong>enriquir amb fonts reals</strong> i evitar un simple dashboard.
+        </p>
+        <p>
+          Aquesta PR2 implementa «Rutes en joc»: visualització narrativa amb mapa i gràfics interactius, més context
+          IUCN/BirdLife per contextualitzar el risc de conservació malgrat que les trajectòries siguin sintètiques.
+        </p>
+      </section>
+
+      <section id="sec-map" aria-labelledby="h-map">
+        <h2 id="h-map">1. On connecten les rutes?</h2>
+        <p class="lead">
+          Mapa de fluxos agregats entre zones d'origen i destí. La gruixor indica el nombre de trajectes;
+          el color, la taxa d'èxit migratori.
+        </p>
+        <p class="chart-insight">
+          Cada arc connecta una zona d'inici i una de final. Un gruix major indica més trajectes similars; el color
+          verd mostra més èxits migratoris i el vermell, més fracassos. Els indicadors superiors resumeixen la mostra
+          segons els filtres actius.
+        </p>
+        <div class="kpi-row" id="kpi-map" aria-live="polite"></div>
+        <div id="map-panel" role="img" aria-label="Mapa mundial de rutes migratòries filtrables"></div>
+      </section>
+
+      <section id="sec-species" aria-labelledby="h-species">
+        <h2 id="h-species">2. Distància i durada per espècie i regió</h2>
+        <p class="lead">Pregunta clau 1 de la PR1: quines espècies i regions associen migracions més llargues?</p>
+        <p class="chart-insight">
+          Les barres més altes corresponen a migracions més llargues (km). El color de cada barra reflecteix la
+          proporció d'èxit: ajuda a veure si les distàncies extremes coincideixen amb més o menys fracassos.
+        </p>
+        <div id="chart-species" class="chart-panel"></div>
+        <div id="context-species" class="context-card" hidden></div>
+      </section>
+
+      <section id="sec-weather" aria-labelledby="h-weather">
+        <h2 id="h-weather">3. Meteorologia i interrupcions</h2>
+        <p class="lead">Pregunta clau 2: en quines condicions augmenta el risc de fracàs o interrupció?</p>
+        <p class="chart-insight">
+          Mostra la taxa d'interrupció segons el temps durant el vol. En general, condicions adverses
+          (<em>Stormy</em>, <em>Foggy</em>, <em>Windy</em>) solen associar-se a més migracions interrompudes que
+          els dies clars.
+        </p>
+        <div id="chart-weather" class="chart-panel"></div>
+      </section>
+
+      <section id="sec-habitat" aria-labelledby="h-habitat">
+        <h2 id="h-habitat">4. Hàbitat, aliment i nidificació</h2>
+        <p class="lead">Pregunta clau 3: com es relacionen hàbitat i disponibilitat d'aliment amb l'èxit de nidificació?</p>
+        <p class="chart-insight">
+          Cada barra combina tipus d'hàbitat i disponibilitat d'aliment. Comparar-les permet veure si determinats
+          entorns (per exemple zones humides amb aliment abundant) s'associen a un major èxit de nidificació.
+        </p>
+        <div id="chart-habitat" class="chart-panel"></div>
+      </section>
+
+      <section id="sec-flock" aria-labelledby="h-flock">
+        <h2 id="h-flock">5. Bandada vs. migració solitària</h2>
+        <p class="lead">Pregunta clau 4: la migració en grup ofereix avantatges mesurables?</p>
+        <p class="chart-insight">
+          Compara l'èxit migratori entre aus que van en bandada i les que migren soles. Si les barres són
+          semblants, el conjunt de dades no mostra un avantatge clar del vol en grup en aquesta simulació.
+        </p>
+        <div id="chart-flock" class="chart-panel"></div>
+      </section>
+
+      <section id="sec-altitude" aria-labelledby="h-altitude">
+        <h2 id="h-altitude">6. Altitud, velocitat i vent</h2>
+        <p class="lead">Pregunta clau 5: patrons d'ús de l'espai aeri segons espècie i meteorologia.</p>
+        <p class="chart-insight">
+          El rang d'altitud (màxim − mínim) descriu com cada espècie utilitza l'espai aeri segons la meteorologia.
+          Valors alts en dies ventosos o tempestuosos poden indicar més variació de vol per evitar obstacles o corrents.
+        </p>
+        <div id="chart-altitude" class="chart-panel"></div>
+      </section>
+
+      <section id="sec-temporal" aria-labelledby="h-temporal">
+        <h2 id="h-temporal">7. Calendaris migratoris</h2>
+        <p class="lead">Pregunta clau 6: distribució temporal dels inicis de migració per espècie.</p>
+        <p class="chart-insight">
+          Cada línia segueix una espècie al llarg dels mesos d'inici de migració. Els pics indiquen èpoques de sortida
+          més freqüents; comparar espècies permet observar desfasaments en el calendari migratori.
+        </p>
+        <div id="chart-temporal" class="chart-panel"></div>
+      </section>
+
+      <section id="sec-limits" aria-labelledby="h-limits">
+        <h2 id="h-limits">8. Límits i reflexió</h2>
+        <p class="lead">
+          Les dades de trajecte són sintètiques; les conclusions sobre patrons interns són exploratòries.
+          La capa de conservació i clima prové de fonts externes reals i orienta la interpretació social.
+        </p>
+        <ul>
+          <li>No substitueix telemetria real (Movebank, eBird).</li>
+          <li>Les coordenades poden ser geogràficament implausibles en casos puntuals.</li>
+          <li>L'enriquiment IUCN/BirdLife és a nivell de grup d'espècies, no d'individu simulat.</li>
+        </ul>
+      </section>
+    </article>
+
+    <aside class="controls" aria-label="Filtres interactius">
+      <h3>Explora les dades</h3>
+      <div class="control-group">
+        <label for="filter-species">Espècie</label>
+        <select id="filter-species" aria-describedby="help-filters">
+          <option value="">Totes</option>
+        </select>
+      </div>
+      <div class="control-group">
+        <label for="filter-region">Regió</label>
+        <select id="filter-region">
+          <option value="">Totes</option>
+        </select>
+      </div>
+      <div class="control-group">
+        <label for="filter-weather">Meteorologia</label>
+        <select id="filter-weather">
+          <option value="">Totes</option>
+        </select>
+      </div>
+      <p id="help-filters" class="sidebar-hint">
+        Els filtres actualitzen totes les visualitzacions. En triar una espècie, el panell inferior mostra dades reals
+        de conservació (IUCN, tendència poblacional i pressions climàtiques).
+      </p>
+      <button type="button" class="toggle-contrast" id="btn-contrast" aria-pressed="false">
+        Mode alt contrast
+      </button>
+      <div id="context-panel" class="context-card" style="margin-top:1rem" aria-live="polite">
+        <strong>Context real (conservació)</strong>
+        <p id="context-text">Selecciona una espècie per veure estat IUCN i pressions climàtiques documentades.</p>
+      </div>
+    </aside>
+  </main>
+
+  <div id="tooltip" class="tooltip" role="tooltip"></div>
+
+  <footer>
+    <p><strong>Autora:</strong> Blanca Tubella · Màster en Ciència de Dades — Visualització de Dades (UOC)</p>
+    <p>
+      Dades simulades:
+      <a href="https://www.kaggle.com/datasets/sahirmaharajj/bird-migration-dataset-data-visualization-eda" target="_blank" rel="noopener">Kaggle bird_migration_with_origin_destination</a>.
+      Codi: MIT · Desplegament: GitHub Pages.
+    </p>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
