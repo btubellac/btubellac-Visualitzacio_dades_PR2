@@ -6,8 +6,9 @@ Visualització narrativa i interactiva sobre migració d'aus, continuació de la
 
 ## Enllaç públic (GitHub Pages)
 
-Visualització: 'https://btubellac.github.io/btubellac-Visualitzacio_dades_PR2/'
-Codi: 'https://github.com/btubellac/btubellac-Visualitzacio_dades_PR2'
+Visualització: https://btubellac.github.io/btubellac-Visualitzacio_dades_PR2/
+
+Codi: https://github.com/btubellac/btubellac-Visualitzacio_dades_PR2
 
 ## Requisits
 
