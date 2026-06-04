@@ -52,9 +52,9 @@ En aquest treball s'ha fet un **ús limitat** d'IA generativa, d'acord amb la no
 |--------|--------|
 | **Eina** | [Cursor](https://cursor.com) (assistent de codi amb model d'IA integrat) |
 | **Objectius** | Suport en l'estructura del repositori i la publicació a GitHub Pages; integració de la galeria d'espècies amb imatges; esbossar la idea narrativa general (seccions, textos d'interpretació i guió del vídeo); resoldre errors tècnics (JSON, rutes de fitxers, càrrega de dades). |
-| **Prompts (exemples)** | «Com publicar el projecte a GitHub Pages?»; «Les imatges no es carreguen al repo»; «Afegeix conclusions breus per a cada gràfic»; «Prepara un guió de vídeo de 5 minuts segons l'enunciat». |
+| **Prompts (exemples)** | «Com publicar el projecte a GitHub Pages?»; «Les imatges no es carreguen al repo»; |
 | **Resposta obtinguda** | Propostes de codi (HTML/CSS/JS, script Python), textos orientatius per a la web i el `GUIO_VIDEO.md`, i instruccions de desplegament. |
-| **Revisió i edició** | Tota la sortida ha estat **revisada, adaptada i validada per l'autora**: selecció del dataset i preguntes (PR1), interpretació de resultats, dades de conservació (IUCN/BirdLife), gravació del vídeo, correccions d'estil i decisions finals de disseny. No s'ha introduït informació personal ni confidencial als prompts. |
+| **Revisió i edició** | Tota la sortida ha estat **revisada, adaptada i validada per l'autora**: selecció del dataset i preguntes (PR1), interpretació de resultats, dades de conservació (IUCN/BirdLife), gravació del vídeo, correccions d'estil i decisions finals de disseny. 
 
 La visualització, les conclusions i el discurs de la memòria/vídeo són responsabilitat de l'autora. L'ús de la IA s'ha limitat a prototipatge i suport tènic, no a la substitució de l'anàlisi ni de la reflexió crítica.
 
