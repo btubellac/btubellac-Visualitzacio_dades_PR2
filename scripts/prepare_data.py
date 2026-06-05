@@ -20,6 +20,8 @@ CSV_PATH = ROOT.parent / "PR1" / "Segona entrega" / "archive" / "bird_migration_
 OUT_DIR = ROOT / "data"
 
 MONTH_ORDER = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+# Agrupa coordenades en cel·les perquè el gruix del mapa reflecteixi volum (el CSV té origen/destí únics per fila).
+FLOW_BIN_DEG = 45
 
 
 def month_index(m: str) -> int:
@@ -65,18 +67,27 @@ def prepare(df: pd.DataFrame) -> dict:
     df["Nesting_Success_binary"] = (df["Nesting_Success"] == "Yes").astype(int)
     df["Migrated_in_Flock_binary"] = (df["Migrated_in_Flock"] == "Yes").astype(int)
 
-    # Fluxos agregats per al mapa (origen/destí per regió)
+    # Fluxos agregats per al mapa: cel·les de 45° (sinó cada trajecte és únic i count=1).
+    df["flow_start_lat"] = (df["Start_Latitude"] / FLOW_BIN_DEG).round() * FLOW_BIN_DEG
+    df["flow_start_lon"] = (df["Start_Longitude"] / FLOW_BIN_DEG).round() * FLOW_BIN_DEG
+    df["flow_end_lat"] = (df["End_Latitude"] / FLOW_BIN_DEG).round() * FLOW_BIN_DEG
+    df["flow_end_lon"] = (df["End_Longitude"] / FLOW_BIN_DEG).round() * FLOW_BIN_DEG
+
     flow = (
-        df.groupby(["Region", "Origin", "Destination", "Species"], as_index=False)
+        df.groupby(
+            ["Species", "flow_start_lat", "flow_start_lon", "flow_end_lat", "flow_end_lon"],
+            as_index=False,
+        )
         .agg(
             count=("Bird_ID", "count"),
             avg_distance=("Flight_Distance_km", "mean"),
             success_rate=("Migration_Success_binary", "mean"),
             interrupted_rate=("Migration_Interrupted_binary", "mean"),
-            start_lat=("Start_Latitude", "mean"),
-            start_lon=("Start_Longitude", "mean"),
-            end_lat=("End_Latitude", "mean"),
-            end_lon=("End_Longitude", "mean"),
+            Region=("Region", lambda s: s.mode().iloc[0]),
+            start_lat=("flow_start_lat", "first"),
+            start_lon=("flow_start_lon", "first"),
+            end_lat=("flow_end_lat", "first"),
+            end_lon=("flow_end_lon", "first"),
         )
         .sort_values("count", ascending=False)
         .head(400)

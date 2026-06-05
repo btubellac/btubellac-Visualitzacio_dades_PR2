@@ -135,6 +135,15 @@
 
     const flows = filteredFlows().slice(0, 80);
     const color = d3.scaleLinear().domain([0, 1]).range(["#c45c3e", "#3d7a5c"]);
+    const countExtent = d3.extent(flows, (d) => d.count);
+    const strokeWidth = d3
+      .scaleSqrt()
+      .domain(
+        countExtent[0] === countExtent[1]
+          ? [1, Math.max(countExtent[0] || 1, 2)]
+          : countExtent
+      )
+      .range([1, 7]);
 
     const linkGen = (d) => {
       const start = projection([d.start_lon, d.start_lat]);
@@ -153,7 +162,7 @@
       .attr("class", "arc")
       .attr("d", (d) => linkGen(d))
       .attr("stroke", (d) => color(d.success_rate))
-      .attr("stroke-width", (d) => Math.sqrt(d.count) * 0.35 + 0.5)
+      .attr("stroke-width", (d) => strokeWidth(d.count))
       .attr("stroke-opacity", 0.65)
       .attr("tabindex", 0)
       .on("mousemove", (event, d) => {
@@ -172,10 +181,10 @@
       })
       .on("blur", hideTooltip);
 
-    const legend = svg.append("g").attr("transform", `translate(16,${height - 36})`);
+    const legend = svg.append("g").attr("transform", `translate(16,${height - 52})`);
     legend
       .append("text")
-      .text("Color = taxa d'èxit")
+      .text("Color = taxa d'èxit · Gruix = nombre de trajectes")
       .attr("fill", "#1a2a33")
       .attr("font-size", 11);
     const grad = legend
@@ -194,6 +203,24 @@
       .attr("fill", "url(#legend-grad)");
   }
 
+  function formatBarValue(yKey, value) {
+    if (yKey.includes("rate")) return `${(value * 100).toFixed(1)}%`;
+    if (yKey.includes("distance") || yKey.includes("altitude")) return `${Math.round(value)}`;
+    return Number(value).toFixed(1);
+  }
+
+  function computeYDomain(values) {
+    const minV = d3.min(values);
+    const maxV = d3.max(values);
+    if (minV == null || maxV == null) return [0, 1];
+    const span = maxV - minV;
+    if (values.length > 1 && span > 0 && span / maxV < 0.2) {
+      const pad = Math.max(span * 0.3, maxV * 0.02);
+      return [Math.max(0, minV - pad), maxV + pad];
+    }
+    return [0, maxV * 1.1 || 1];
+  }
+
   function barChart(containerId, rows, { xKey, yKey, yLabel, colorKey }) {
     const container = d3.select(containerId);
     container.selectAll("*").remove();
@@ -203,8 +230,8 @@
     }
 
     const width = container.node().clientWidth || 600;
-    const height = 280;
-    const margin = { top: 20, right: 16, bottom: 70, left: 48 };
+    const height = 300;
+    const margin = { top: 28, right: 16, bottom: 78, left: 48 };
     const innerW = width - margin.left - margin.right;
     const innerH = height - margin.top - margin.bottom;
 
@@ -222,11 +249,10 @@
       .domain(rows.map((d) => d[xKey]))
       .range([0, innerW])
       .padding(0.2);
-    const y = d3
-      .scaleLinear()
-      .domain([0, d3.max(rows, (d) => d[yKey]) * 1.1 || 1])
-      .nice()
-      .range([innerH, 0]);
+    const values = rows.map((d) => +d[yKey]);
+    const yDomain = computeYDomain(values);
+    const yZoomed = yDomain[0] > 0;
+    const y = d3.scaleLinear().domain(yDomain).nice().range([innerH, 0]);
 
     g.append("g")
       .attr("transform", `translate(0,${innerH})`)
@@ -236,12 +262,23 @@
       .style("text-anchor", "end")
       .attr("font-size", 10);
 
-    g.append("g").call(d3.axisLeft(y).ticks(5));
+    g.append("g").call(
+      d3.axisLeft(y).ticks(5).tickFormat((v) => (yKey.includes("rate") ? `${(v * 100).toFixed(0)}%` : v))
+    );
     g.append("text")
       .attr("x", -40)
       .attr("y", -6)
       .attr("font-size", 11)
       .text(yLabel);
+    if (yZoomed) {
+      g.append("text")
+        .attr("x", innerW)
+        .attr("y", -6)
+        .attr("text-anchor", "end")
+        .attr("font-size", 9)
+        .attr("fill", "#5a6a72")
+        .text("Escala ampliada");
+    }
 
     const colorFn =
       colorKey === "success_rate"
@@ -263,6 +300,17 @@
         showTooltip(`<strong>${d[xKey]}</strong><br/>${yLabel}: ${d[yKey].toFixed?.(1) ?? d[yKey]}${extra}<br/>n=${d.n}`, event);
       })
       .on("mouseleave", hideTooltip);
+
+    g.selectAll("text.bar-label")
+      .data(rows)
+      .join("text")
+      .attr("class", "bar-label")
+      .attr("x", (d) => x(d[xKey]) + x.bandwidth() / 2)
+      .attr("y", (d) => y(d[yKey]) - 4)
+      .attr("text-anchor", "middle")
+      .attr("font-size", 9)
+      .attr("fill", "#1a2a33")
+      .text((d) => formatBarValue(yKey, d[yKey]));
   }
 
   function renderSpeciesChart() {
@@ -360,9 +408,10 @@
       .scalePoint()
       .domain(state.data.month_order)
       .range([0, innerW]);
+    const counts = rows.map((d) => d.n);
     const y = d3
       .scaleLinear()
-      .domain([0, d3.max(rows, (d) => d.n) * 1.1 || 1])
+      .domain(computeYDomain(counts))
       .nice()
       .range([innerH, 0]);
 
